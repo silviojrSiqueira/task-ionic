@@ -2,7 +2,19 @@
   <h1 text-center>
     <ion-icon name="done-all" color="primary" class="icon-7em"></ion-icon>
   </h1>
-  <form [formGroup]="authForm" (submit)="onSubmit()">
+  <form [formGroup]="authForm" (submit)="onSubmit(authProvider.Email)">
+    <ng-container *ngIf="!configs.isSignIn">
+      <ion-item>
+        <ion-icon name="person" color="primary" slot="start"></ion-icon>
+        <ion-input type="text" placeholder="Name" formControlName="name"></ion-input>
+        <ion-note slot="end" color="danger" *ngIf="name.dirty && name.hasError('required')"
+          >Required</ion-note
+        >
+        <ion-note slot="end" color="danger" *ngIf="name.dirty && name.hasError('minlength')"
+          >Min 3 characters
+        </ion-note>
+      </ion-item>
+    </ng-container>
     <ion-item>
       <ion-icon name="mail" color="primary" slot="start"></ion-icon>
       <ion-input
@@ -31,11 +43,15 @@
       >
     </ion-item>
 
-    <ion-button expand="block" type="submit" [disabled]="authForm.invalid">Login</ion-button>
+    <ion-button expand="block" type="submit" [disabled]="authForm.invalid">{{
+      configs.action
+    }}</ion-button>
   </form>
 
-  <ion-button expand="block" fill="clear">Create account</ion-button>
-  <ion-button expand="block">
+  <ion-button expand="block" fill="clear" (click)="changeAuthAction()">{{
+    configs.actionChange
+  }}</ion-button>
+  <ion-button expand="block" (click)="onSubmit(authProvider.Facebook)">
     <ion-icon name="logo-facebook" slot="start"></ion-icon>
     Login with Facebook
   </ion-button>
